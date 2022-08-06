@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'add_task_sreen.dart';
-import 'complated_tasks_screen.dart';
+import 'completed_tasks_screen.dart';
 import 'favourite_tasks_screen.dart';
 import 'pending_tasks_screen.dart';
 import 'my_drawer.dart';
