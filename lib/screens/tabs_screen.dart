@@ -1,90 +1,86 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/add_edit_task.dart';
-import '../widgets/tasks_drawer.dart';
-import 'completed_tasks_screen.dart';
-import 'favorite_tasks_screen.dart';
+import 'add_task_sreen.dart';
+import 'complated_tasks_screen.dart';
+import 'favourite_tasks_screen.dart';
 import 'pending_tasks_screen.dart';
+import 'my_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({Key? key}) : super(key: key);
 
-  static const path = '/tabs';
-
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  State<TabsScreen> createState() => _Tabs_screenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
-  final List<Map<String, dynamic>> _pageDetails = [
-    {'page': const PendingTasksScreen(), 'title': 'Pending Tasks'},
+// ignore: camel_case_types
+class _Tabs_screenState extends State<TabsScreen> {
+  final List<Map<String, dynamic>> _pages = [
+    {'page': const TasksScreen(), 'title': 'Pending Tasks'},
     {'page': const CompletedTasksScreen(), 'title': 'Completed Tasks'},
-    {'page': const FavoriteTasksScreen(), 'title': 'Favorite Tasks'},
+    {'page': const FavouriteTasksScreen(), 'title': 'Favourite Tasks'},
   ];
 
-  var _selectedPageIndex = 0;
-
-  void _addNewTask(BuildContext context) {
+  void _addTask(BuildContext ctx) {
     showModalBottomSheet(
-      context: context,
+      context: ctx,
       isScrollControlled: true,
       builder: (context) => SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: const AddEditTask(),
+          padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: const AddTaskScreen(),
         ),
       ),
     );
   }
 
+  var _selectedPageIndex = 0;
+  void _selectPage(int index) {
+    setState(() {
+      _selectedPageIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedPage = _pageDetails[_selectedPageIndex];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedPage['title']),
-        actions: _selectedPageIndex == 0
-            ? [
-                IconButton(
-                  onPressed: () => _addNewTask(context),
-                  icon: const Icon(Icons.add),
-                ),
-              ]
-            : null,
-      ),
-      drawer: const TasksDrawer(),
-      body: selectedPage['page'],
-      floatingActionButton: _selectedPageIndex == 0
-          ? FloatingActionButton(
-              onPressed: () => _addNewTask(context),
-              tooltip: 'Add Task',
-              child: const Icon(Icons.add),
-            )
-          : null,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedPageIndex,
-        elevation: 24,
-        onTap: (index) {
-          setState(() => _selectedPageIndex = index);
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.incomplete_circle_sharp),
-            label: 'Pending Tasks',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.done),
-            label: 'Completed Tasks',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite Tasks',
-          ),
+        title: Text(_pages[_selectedPageIndex]['title']),
+        actions: [
+          IconButton(
+            onPressed: () => _addTask(context),
+            icon: const Icon(Icons.add),
+          )
         ],
       ),
+      drawer: const MyDrawer(),
+      floatingActionButton: _selectedPageIndex == 0
+          ? FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => _addTask(context),
+      )
+          : null,
+      body: _pages[_selectedPageIndex]['page'],
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedPageIndex,
+          onTap: _selectPage,
+          items: [
+            BottomNavigationBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: const Icon(Icons.incomplete_circle_sharp),
+              label: 'Pending Tasks',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: const Icon(Icons.done),
+              label: 'Completed Tasks',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: const Icon(Icons.favorite),
+              label: 'Favorite Tasks',
+            ),
+          ]),
     );
   }
 }

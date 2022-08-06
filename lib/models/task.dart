@@ -1,70 +1,47 @@
-import 'package:equatable/equatable.dart';
-import 'package:uuid/uuid.dart';
+import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
+// ignore: must_be_immutable
 class Task extends Equatable {
-  final String? id;
+  final String id;
   final String title;
   final String description;
-  final String? createdAt;
-  final bool? isDone;
-  final bool? isDeleted;
-  final bool? isFavorite;
+  final String date;
+  bool? isDone;
+  bool? isCancelled;
+  bool? isFavourite;
 
   Task({
-    id,
+    required this.id,
     required this.title,
     required this.description,
-    createdAt,
-    isDone,
-    isDeleted,
-    isFavorite,
-  })  : id = id ?? const Uuid().v4(),
-        createdAt = createdAt ?? DateTime.now().toString(),
-        isDone = isDone ?? false,
-        isDeleted = isDeleted ?? false,
-        isFavorite = isFavorite ?? false;
-
-  Task copyWith({
-    String? id,
-    String? title,
-    String? description,
-    String? createdAt,
-    bool? isDone,
-    bool? isDeleted,
-    bool? isFavorite,
+    required this.date,
+    this.isDone,
+    this.isCancelled,
+    this.isFavourite,
   }) {
+    isDone = isDone ?? false;
+    isCancelled = isCancelled ?? false;
+    isFavourite = isFavourite ?? false;
+  }
+
+  Task copyWith(
+      {String? id,
+      String? title,
+      String? description,
+      String? date,
+      bool? isDone,
+      bool? isCancelled,
+      bool? isFavourite}) {
     return Task(
       id: id ?? this.id,
       title: title ?? this.title,
-      description: description ?? this.description,
-      createdAt: createdAt ?? this.createdAt,
+      description: title ?? this.description,
+      date: date ?? this.date,
       isDone: isDone ?? this.isDone,
-      isDeleted: isDeleted ?? this.isDeleted,
-      isFavorite: isFavorite ?? this.isFavorite,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'createdAt': createdAt,
-      'isDone': isDone,
-      'isDeleted': isDeleted,
-      'isFavorite': isFavorite,
-    };
-  }
-
-  factory Task.fromMap(Map<String, dynamic> map) {
-    return Task(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      createdAt: map['createdAt'] as String,
-      isDone: map['isDone'] as bool,
-      isDeleted: map['isDeleted'] as bool,
-      isFavorite: map['isFavorite'] as bool,
+      isCancelled: isCancelled ?? this.isCancelled,
+      isFavourite: isFavourite ?? this.isFavourite,
     );
   }
 
@@ -73,9 +50,37 @@ class Task extends Equatable {
         id,
         title,
         description,
-        createdAt,
+        date,
+        isCancelled,
         isDone,
-        isDeleted,
-        isFavorite,
+        isFavourite,
       ];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': date,
+      'isDone': isDone,
+      'isCancelled': isCancelled,
+      'isFavourite': isFavourite,
+    };
+  }
+
+  factory Task.fromMap(Map<String, dynamic> map) {
+    return Task(
+      id: map['id'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      date: map['date'] ?? '',
+      isDone: map['isDone'],
+      isCancelled: map['isCancelled'],
+      isFavourite: map['isFavourite'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Task.fromJson(String source) => Task.fromMap(json.decode(source));
 }

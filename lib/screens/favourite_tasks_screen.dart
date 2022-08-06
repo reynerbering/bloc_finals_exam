@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../blocs/bloc_imports.dart';
 import '../widgets/tasks_list.dart';
 
-class CompletedTasksScreen extends StatelessWidget {
-  const CompletedTasksScreen({Key? key}) : super(key: key);
+class FavouriteTasksScreen extends StatelessWidget {
+  const FavouriteTasksScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class CompletedTasksScreen extends StatelessWidget {
         children: [
           Chip(
             label: Text(
-              '${state.pendingTasks.length} pending | ${state.completedTasks.length} completed',
+              '${state.favouriteTasks.length} tasks',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -25,7 +25,7 @@ class CompletedTasksScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: TasksList(
-                tasks: state.completedTasks,
+                tasks: state.favouriteTasks,
               ),
             ),
           ),
